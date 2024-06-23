@@ -28,7 +28,7 @@ A push notification micro server using [Gin](https://github.com/gin-gonic/gin) f
     - [Send Android notification](#send-android-notification)
     - [Send Huawei (HMS) notification](#send-huawei-hms-notification)
     - [Send iOS notification](#send-ios-notification)
-    - [Send Android or iOS notifications using Firebase](#send-android-or-ios-notifications-using-firebase)
+    - [Send Android or iOS notifications using Firebase Cloud Messaging](#send-android-or-ios-notifications-using-firebase-cloud-messaging)
   - [Run gorush web server](#run-gorush-web-server)
   - [Web API](#web-api)
     - [GET /api/stat/go](#get-apistatgo)
@@ -352,7 +352,7 @@ gorush -android -m "your message" -t "device token"
 Send messages to topics.
 
 ```bash
-gorush --android --topic "/topics/foo-bar" \
+gorush --android --topic "foo-bar" \
   -m "This is a Firebase Cloud Messaging Topic Message" \
   --fcm-key "FCM Credentials Key Path"
 ```
@@ -413,12 +413,14 @@ $ gorush -ios -m "your message" -i "your certificate path" \
   -production
 ```
 
-### Send Android or iOS notifications using Firebase
+### Send Android or iOS notifications using Firebase Cloud Messaging
 
 Send single notification with the following command:
 
 ```bash
-gorush -android -m "your message" -k "API key" -t "Device token"
+gorush -android -m "your message" \
+  --fcm-key "FCM Credentials Key Path" \
+  -t "Device token"
 ```
 
 ## Run gorush web server
@@ -600,6 +602,32 @@ Simple send notification on Android and iOS devices using Firebase, the `platfor
       "tokens": ["token_a", "token_b"],
       "platform": 2,
       "message": "This notification will go to iOS and Android platform via Firebase!"
+    }
+  ]
+}
+```
+
+Send notification with custom sound on iOS devices, **volume must be in the interval [0, 1]**:
+
+```json
+{
+  "notifications": [
+    {
+      "tokens": ["token_a", "token_b"],
+      "title": "Hello World iOS!",
+      "message": "Hello World iOS!",
+      "platform": 2,
+      "apns": {
+        "payload": {
+          "aps": {
+            "sound": {
+              "name": "default",
+              "critical": 1,
+              "volume": 0.1
+            }
+          }
+        }
+      }
     }
   ]
 }

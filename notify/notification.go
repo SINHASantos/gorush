@@ -12,9 +12,9 @@ import (
 	"github.com/appleboy/gorush/logx"
 
 	"firebase.google.com/go/v4/messaging"
+	"github.com/appleboy/go-hms-push/push/model"
 	qcore "github.com/golang-queue/queue/core"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/msalihkarakasli/go-hms-push/push/model"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -239,11 +239,11 @@ func SendNotification(
 
 	switch v.Platform {
 	case core.PlatFormIos:
-		resp, err = PushToIOS(v, cfg)
+		resp, err = PushToIOS(ctx, v, cfg)
 	case core.PlatFormAndroid:
-		resp, err = PushToAndroid(v, cfg)
+		resp, err = PushToAndroid(ctx, v, cfg)
 	case core.PlatFormHuawei:
-		resp, err = PushToHuawei(v, cfg)
+		resp, err = PushToHuawei(ctx, v, cfg)
 	}
 
 	if cfg.Core.FeedbackURL != "" {
